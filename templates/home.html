@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static%}
+{% block style%}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+{% block content %}
+<section class="section1 d-flex align-items-center justify-content-center m-auto mt-md-5 py-md-5">
+
+    <div class="row align-items-center justify-content-between mt-md-5 ">
+
+        <div class="col-md-7">
+            <h1 class="heading text-info">Discover Your Dream Ride at <span class="text-primary">DriveDream</span>.</h1>
+            <h3 class="text-secondary">Explore a World of Possibilities with DriveDream's Vast Selection of Quality
+                Vehicles</h3>
+            <p class="lead fw-medium ">Embark on a smooth journey to automotive excellence with DriveDream's diverse
+                selection of quality vehicles. Our premier selection, comprehensive inspections, and personalized
+                service ensure every <code>customer</code> finds their perfect match, turning automotive dreams into
+                reality.</p>
+            <a href="#products"><button class="btn btn-lg btn-danger fs-2 fw-medium">View Cars</button></a>
+        </div>
+        <img src="{% static 'images/Vehicle Sale-bro.png' %}" alt="Img" class="col-md-5 mt-5 mt-md-0">
+
+    </div>
+</section>
+<section id="products">
+    <div class="container ">
+        <div class="row">
+            <h4>Brands</h4>
+            <hr>
+            <div class="col">
+                <div class="scroll-box">
+                    <a href="{% url 'home_slug' 'all-brand' %}"
+                        class="nav-link d-inline-block text-center bg-light p-3 rounded-4 mr-4"
+                        style="width: 200px;">All</a>
+                    {% for brand in brands %}
+                    <a href="{% url 'home_slug' brand.slug %}"
+                        class="nav-link d-inline-block text-center bg-light p-3 rounded-4 mr-4"
+                        style="width: 200px;">{{brand.name}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+</section>
+
+<section class="section1 m-auto pt-5 mt-5">
+    <div class="text-center">
+        <h1 class="mt-3">Available Cars : {{cars|length}}</h1>
+        <div class="row align-items-center justify-content-around mt-md-5 mt-3 pt-md-3 pt-0">
+            {% for car in cars%}
+            <div class="card col-sm-6 col-lg-4 col-xl-3 border-0 mb-5">
+                <img src="{{car.image.url}}" class="card-img-top" alt="car img">
+                <div class="card-body p-0 text-start mt-4">
+                    <p class="m-0 lead fw-bold">{{car.model}} {{car.year}} </p>
+                    <p class="m-0 lead">${{car.price}}</p>
+                    <p class="m-0 lead fw-bold">Brand: {{car.brand}}</p>
+                    {% if car.quantity > 0 %}
+                    <p class=" m-0 text-success">Product In Stock</p>
+                    {% else %}
+                    <p class="m-0 text-danger">Out Of Stock</p>
+                    {% endif %}
+                    {% if request.user.is_authenticated and car.quantity > 0 %}
+                    <a href="{% url 'order_details' car.slug %}" class="my-2 me-3 btn btn-small btn-warning">Buy Now</a>
+                    {% endif %}
+                    <a href="{% url 'car_details' car.slug %}" class=" my-2 btn btn-small btn-secondary">View details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
